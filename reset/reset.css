@@ -1,0 +1,22 @@
+body, html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background: black;
+	color: white;
+	font-family: sans-serif;
+}
+#reset-main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+button {
+        border: none;
+        border-radius: 3px;
+        background: white;
+        color: black;
+	padding: 5px;
+}

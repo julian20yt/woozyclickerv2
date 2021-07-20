@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Resetting...</title>
+		<script>
+			window.onload = () => {
+				document.querySelector("#resetbtn").addEventListener("click", () => {
+					localStorage.setItem("woozies", "0");
+                			localStorage.setItem("boost", "0");
+                			localStorage.setItem("clickBoost", "0");
+                			localStorage.setItem("boostPrice", "100");
+                			localStorage.setItem("clickBoostPrice", "200");
+					window.location.href = "..";
+				})
+			}
+		</script>
+		<link rel="stylesheet" href="reset.css">
+	</head>
+	<body>
+		<div id="reset-main">
+			<h2>Press the button below to reset.</h2>
+			<button id="resetbtn">Reset</button>
+		</div>
+	</body>
+</html>
