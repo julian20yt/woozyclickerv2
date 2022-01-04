@@ -1,0 +1,43 @@
+html, body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	background: linear-gradient(to bottom, #ddd, #ccc);
+	display: flex;
+	justify-content: center;
+	box-sizing: border-box;
+	font-family: sans-serif;
+}
+#seized-box {
+	display: flex;
+	border: 1px solid #555;
+	border-radius: 5px;
+	box-sizing: border-box;
+	background: #eee;
+	padding: 20px 0;
+	max-width: 700px;
+	width: 100%;
+	flex-direction: column;
+	margin: 30px 10px;
+	height: max-content;
+}
+#seized-header, #seized-main {
+	padding: 0 20px;
+	display: flex;
+}
+#seized-header {
+	align-items: center;
+	border-bottom: 5px solid #fcd215;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+#seized-main {
+	flex-direction: column;
+}
+.bigtext {
+	font-size: 24px;
+}
+#coa {
+	padding-right: 10px;
+}
