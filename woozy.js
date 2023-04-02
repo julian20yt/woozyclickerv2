@@ -4,6 +4,7 @@ window.onload = () => {
 	const woozyCount = document.querySelector("#woozies");
 	const clickBoost = document.querySelector("#clickboost");
 	const boost = document.querySelector("#boost");
+	const woozieEvolution = document.querySelector("#woozyevolution");
 	const shop = document.querySelector("#shop");
 
 	const sounds = {
@@ -11,16 +12,32 @@ window.onload = () => {
 		"boost": "stuff/sounds/boost.wav"
 	}
 
-	const shopItems = [{"name": "Boost", "id": "boost", "pincrease": 1.2, "img": "stuff/powerups/boost.png"}, {"name": "Clickboost", "id": "clickBoost", "pincrease": 1.7, "img": "stuff/powerups/mouse.png"}]
+	const shopItems = [{ "name": "Boost", "id": "boost", "pincrease": 1.2, "img": "stuff/powerups/boost.png" }, { "name": "Clickboost", "id": "clickBoost", "pincrease": 1.7, "img": "stuff/powerups/mouse.png" }, { "name": "Evolve the Woozy", "id": "woozyevolve", "pincrease": 2, "img": "stuff/powerups/woozyevolve.png", "max": 5, "onBuy": updateWoozyEvolution }]
+	const evolutionNames = ["Woozy", "Soozy", "Hmoozy", "Zoozy", "Groozy", "Spiral face"]
 
-	if(!localStorage.getItem("woozies") || !localStorage.getItem("boost") || !localStorage.getItem("clickBoost") || !localStorage.getItem("boostPrice") || !localStorage.getItem("clickBoostPrice")) {
-		localStorage.setItem("woozies", "0");
-		localStorage.setItem("boost", "0");
-		localStorage.setItem("clickBoost", "0");
-		localStorage.setItem("boostPrice", "100");
-		localStorage.setItem("clickBoostPrice", "200");
+	const defaults = {
+		"woozies": 0,
+		"boost": 0,
+		"woozyevolve": 0,
+		"clickBoost": 0,
+		"boostPrice": 100,
+		"clickBoostPrice": 200,
+		"woozyevolvePrice": 1000
 	}
 
+	for(var i = 0; i < 6; i++) {
+		(new Image()).src = "stuff/evolutions/" + i.toString() + ".png"
+	}
+
+	for(var parameter in defaults) {
+		if (!localStorage.getItem(parameter)) {
+			localStorage.setItem(parameter, defaults[parameter].toString());
+		}
+	}
+
+	function getShopItemById(id) {
+		return shopItems.find(item => item.id == id);
+	}
 	function intFromLS(item) {
 		return parseInt(localStorage.getItem(item));
 	}
@@ -35,11 +52,12 @@ window.onload = () => {
 		woozyCount.innerHTML = woozies
 		clickBoost.innerHTML = localStorage.getItem("clickBoost");
 		boost.innerHTML = localStorage.getItem("boost");
+		woozieEvolution.innerHTML = evolutionNames[intFromLS("woozyevolve")];
 		document.title = woozies + " w - Woozy Clicker"
 	}
 	function updateWoozies(amount, set = false) {
 		var update;
-		if(set) {
+		if (set) {
 			update = amount
 		} else {
 			update = intFromLS("woozies") + amount
@@ -48,26 +66,37 @@ window.onload = () => {
 		refreshInfo();
 	}
 	function updateBoost(type, amount, pIncrease) {
-		if(isNaN(amount) || amount < 1) {
+		if (isNaN(amount) || amount < 1) {
 			alert("what")
 		} else {
 			const price = intFromLS(type + "Price")
-			if(price * amount > intFromLS("woozies")) {
+			const playerHas = intFromLS(type)
+			const item = getShopItemById(type)
+			if (!item) alert("??????? whar")
+			const max = item.max;
+			if (max && (playerHas + amount > max)) {
+				alert("You can't have that many of \"" + item.name + "\" (maximum is " + item.max.toString() + ")")
+			} else if (price * amount > intFromLS("woozies")) {
 				alert("Get some money first");
 				return undefined;
 			} else {
-				const update = intFromLS(type) + amount;
+				const update = playerHas + amount;
 				const priceUpdate = (price * amount * pIncrease).toFixed();
 				localStorage.setItem(type, update.toString());
 				localStorage.setItem(type + "Price", priceUpdate.toString());
 				updateWoozies(price * -1);
 				refreshInfo();
 				playSound(sounds.boost);
+				if (item.onBuy) item.onBuy()
 				return priceUpdate;
 			}
 		}
 	}
-	
+	function updateWoozyEvolution() {
+		evolution = intFromLS("woozyevolve");
+		woozy.style.backgroundImage = "url(stuff/evolutions/" + evolution.toString() + ".png)"
+	}
+
 	[].forEach.call(shopItems, sItem => {
 		const itemDiv = document.createElement("div")
 		itemDiv.classList.add("shopitem");
@@ -85,12 +114,13 @@ window.onload = () => {
 		shop.appendChild(itemDiv);
 		itemDiv.querySelector(".buybtn").addEventListener("click", () => {
 			const pup = updateBoost(sItem.id, parseInt(itemDiv.querySelector(".buyamount").value), sItem.pincrease);
-			if(pup !== undefined) {
+			if (pup !== undefined) {
 				itemDiv.querySelector(".itemprice").innerHTML = pup
 			}
 		})
 	})
 
+	updateWoozyEvolution();
 	refreshInfo();
 
 	woozy.addEventListener("click", () => {
@@ -98,7 +128,7 @@ window.onload = () => {
 		playSound(sounds.woozy)
 	});
 
-	
+
 
 	setInterval(() => updateWoozies(intFromLS("boost")), 1000)
 

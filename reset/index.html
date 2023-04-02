@@ -5,11 +5,9 @@
 		<script>
 			window.onload = () => {
 				document.querySelector("#resetbtn").addEventListener("click", () => {
-					localStorage.setItem("woozies", "0");
-                			localStorage.setItem("boost", "0");
-                			localStorage.setItem("clickBoost", "0");
-                			localStorage.setItem("boostPrice", "100");
-                			localStorage.setItem("clickBoostPrice", "200");
+                	for(var key in localStorage) {
+						localStorage.removeItem(key)
+					}
 					window.location.href = "..";
 				})
 			}

@@ -62,7 +62,7 @@ input {
 	flex-direction: column;
 }
 #woozy {
-	background: url("stuff/woozy.png");
+	background: url("stuff/evolutions/0.png");
 	background-size: cover;
 	width: 350px;
 	height: 350px;
